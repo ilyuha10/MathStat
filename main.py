@@ -27,6 +27,7 @@ def get_distr(d_name, num):
         return np.random.uniform(-np.sqrt(3), np.sqrt(3), num)
     return []
 
+
 def get_func(d_name, x):
     if d_name == 'Norm':
         return 0.5 * (1 + erf(x / np.sqrt(2)))
@@ -48,14 +49,16 @@ def get_func(d_name, x):
             return 1
     return 0
 
+
 def get_func_array(d_name, array):
-  return [get_func(d_name, x) for x in array]
+    return [get_func(d_name, x) for x in array]
+
 
 def get_density_func(d_name, array):
     if d_name == 'Norm':
-        return [1 / (1 * np.sqrt(2 * np.pi)) * np.exp( - (x - 0) ** 2 / (2 * 1 ** 2) ) for x in array]
+        return [1 / (1 * np.sqrt(2 * np.pi)) * np.exp(- (x - 0) ** 2 / (2 * 1 ** 2)) for x in array]
     elif d_name == 'Cauchy':
-        return [1 / (np.pi * (x ** 2 + 1) ) for x in array]
+        return [1 / (np.pi * (x ** 2 + 1)) for x in array]
     elif d_name == 'Laplace':
         return [1 / np.sqrt(2) * np.exp(-np.sqrt(2) * np.fabs(x)) for x in array]
     elif d_name == 'Poisson':
@@ -64,17 +67,18 @@ def get_density_func(d_name, array):
         return [1 / (2 * np.sqrt(3)) if abs(x) <= np.sqrt(3) else 0 for x in array]
     return []
 
+
 def cm_to_inch(value):
-  return value/2.54
+    return value / 2.54
 
 
 def calc_quart(array, p):
-  new_array = np.sort(array)
-  k = len(array) * p
-  if k.is_integer():
-      return new_array[int(k)]
-  else:
-      return new_array[int(k) + 1]
+    new_array = np.sort(array)
+    k = len(array) * p
+    if k.is_integer():
+        return new_array[int(k)]
+    else:
+        return new_array[int(k) + 1]
 
 
 def calc_z_q(array):
@@ -92,26 +96,23 @@ def calc_z_tr(array):
     return sum / (len(array) - 2 * r)
 
 
-
 if __name__ == "__main__":
     # first task
-  '''  sizes = [10, 50, 1000]
-    for distr_name in distr_type:
-        fig, ax = plt.subplots(1, 3, figsize=(cm_to_inch(30), cm_to_inch(10)))
-        plt.subplots_adjust(wspace=0.5)
-        fig.suptitle(distr_name)
-        for i in range(len(sizes)):
-            array = get_distr(distr_name, sizes[i])
-            n, bins, patches = ax[i].hist(array, num_bins, density=1, edgecolor='black', alpha=0.2)
-            ax[i].plot(bins, get_density_func(distr_name, bins), color='r', linewidth=1)
-            ax[i].set_title("n = " + str(sizes[i]))
-        if not os.path.isdir('task1_data'):
-            os.makedirs("task1_data")
-        plt.savefig("task1_data/" + distr_name + ".png")
-    plt.show()'''
-
-    #second
-
+    '''  sizes = [10, 50, 1000]
+      for distr_name in distr_type:
+          fig, ax = plt.subplots(1, 3, figsize=(cm_to_inch(30), cm_to_inch(10)))
+          plt.subplots_adjust(wspace=0.5)
+          fig.suptitle(distr_name)
+          for i in range(len(sizes)):
+              array = get_distr(distr_name, sizes[i])
+              n, bins, patches = ax[i].hist(array, num_bins, density=1, edgecolor='black', alpha=0.2)
+              ax[i].plot(bins, get_density_func(distr_name, bins), color='r', linewidth=1)
+              ax[i].set_title("n = " + str(sizes[i]))
+          if not os.path.isdir('task1_data'):
+              os.makedirs("task1_data")
+          plt.savefig("task1_data/" + distr_name + ".png")
+      plt.show()
+      #second'''
     number_of_repeats = 1000
     quan_of_numbers = [10, 100, 1000]
     # clean file
@@ -156,6 +157,19 @@ if __name__ == "__main__":
                          np.around(np.std(z_r) * np.std(z_r), decimals=6),
                          np.around(np.std(z_q_) * np.std(z_q_), decimals=6),
                          np.around(np.std(z_tr_) * np.std(z_tr_), decimals=6)])
+            rows.append(["$E(z) - \sqrtD(z)",
+                         np.around(np.mean(mean) - np.std(mean), decimals=6),
+                         np.around(np.mean(med) - np.std(med), decimals=6),
+                         np.around(np.mean(z_r) - np.std(z_r), decimals=6),
+                         np.around(np.mean(z_q_) - np.std(z_q_), decimals=6),
+                         np.around(np.mean(z_tr_) - np.std(z_tr_), decimals=6)])
+            rows.append(["E(z) + \sqrtD(z)",
+                         np.around(np.mean(mean) + np.std(mean), decimals=6),
+                         np.around(np.mean(med) + np.std(med), decimals=6),
+                         np.around(np.mean(z_r) + np.std(z_r), decimals=6),
+                         np.around(np.mean(z_q_) + np.std(z_q_), decimals=6),
+                         np.around(np.mean(z_tr_) + np.std(z_tr_), decimals=6)])
+
             i += 1
         print(rows)
         if not os.path.isdir('task2_data'):
@@ -167,7 +181,6 @@ if __name__ == "__main__":
                     f.write(row[0] + "\n")
                 else:
                     f.write(" ".join([str(i) for i in row]) + "\n")
-
 # third
 ''' number_of_repeats = 1000
   quan_of_numbers = [20, 100]
@@ -218,7 +231,7 @@ if __name__ == "__main__":
   with open("task3_data/task3.csv", "w") as f:
     plt.show()
 '''
-#task 4
+# task 4
 ''' quan_of_numbers = [20, 60, 100]
   repeat = 1000
   for dist_name in distr_type:
@@ -258,7 +271,7 @@ if __name__ == "__main__":
       plt.savefig("task4_data/" + dist_name + "_emperic_f.png")
   plt.show()
 '''
-#4.1
+# 4.1
 '''quan_of_numbers = [20, 60, 100]
   repeat = 1000
   for dist_name in distr_type:
